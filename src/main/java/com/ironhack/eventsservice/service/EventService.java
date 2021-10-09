@@ -3,6 +3,8 @@ package com.ironhack.eventsservice.service;
 import com.ironhack.eventsservice.dao.Event;
 import com.ironhack.eventsservice.dto.CoachDTO;
 import com.ironhack.eventsservice.dto.EventDTO;
+import com.ironhack.eventsservice.dto.NotificationRequestDTO;
+import com.ironhack.eventsservice.proxy.NotificationRequestProxy;
 import com.ironhack.eventsservice.proxy.UserServiceProxy;
 import com.ironhack.eventsservice.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class EventService {
     @Autowired
     UserServiceProxy userServiceProxy;
 
+    @Autowired
+    NotificationRequestProxy notificationRequestProxy;
+
     public List<Event> findAll() { return eventRepository.findAll();}
 
     public EventDTO findById(long id) {
@@ -36,6 +41,7 @@ public class EventService {
             Event event = convertDtoToEvent(eventDTO);
             eventRepository.save(event);
             EventDTO newEventDTO = convertEventToDto(event);
+            createNotificationRequest(eventDTO);
             return newEventDTO;
         }
         else {
@@ -63,5 +69,14 @@ public class EventService {
                 eventDTO.getWhen(), eventDTO.getDuration(), eventDTO.getCoachId(),
                 eventDTO.getEventType());
         return newEvent;
+    }
+
+    public void createNotificationRequest(EventDTO eventDTO) {
+        notificationRequestProxy.createNotificationRequestFromEvent(convertEventDTOtoNotification(eventDTO));
+    }
+
+    public NotificationRequestDTO convertEventDTOtoNotification(EventDTO eventDTO) {
+        NotificationRequestDTO newNotification = new NotificationRequestDTO(eventDTO.getName(),eventDTO.toString());
+        return newNotification;
     }
 }

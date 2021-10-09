@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient("user-service")
 public interface UserServiceProxy {
 
-    @GetMapping("/api/coaches/{coachId}")
-    public CoachDTO findById(@PathVariable(name = "coachId") long id);
+    @GetMapping("/api/coaches/active/{coachId}")
+    CoachDTO findById(@PathVariable(name = "coachId") long id);
 
 }

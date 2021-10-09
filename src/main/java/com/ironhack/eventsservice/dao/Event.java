@@ -1,10 +1,17 @@
 package com.ironhack.eventsservice.dao;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.ironhack.eventsservice.EventType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,6 +31,9 @@ public class Event {
     private Long id;
 
     private String name;
+
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime when;
     private int duration;
     private Long coachId;
@@ -36,4 +46,10 @@ public class Event {
         this.coachId = coachId;
         this.eventType = eventType;
     }
+
+    @Override
+    public String toString() {
+        return (this.name + ". Date: " + this.when + ". Duration: " + this.duration + ". Coach ID: " + this.coachId + ". Event type: " + this.eventType);
+    }
+
 }
